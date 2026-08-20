@@ -105,6 +105,7 @@ export default function App() {
   const [violations, setViolations] = useState([]);
   const [timestamp, setTimestamp] = useState('');
   const [options, setOptions] = useState({ balanceGender: true, avoidPrevious: true });
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const canvasRef = useRef(null);
 
@@ -383,9 +384,73 @@ export default function App() {
   }, [isShuffling]);
 
   return (
-    <div style={{ position: 'relative', minHeight: '100vh', zIndex: 1 }}>
+    <div style={{ position: 'relative', minHeight: '100vh', zIndex: 1, overflowX: 'hidden' }}>
       {/* 3D Starfield Warp Speed Canvas */}
       <canvas ref={canvasRef} className="starfield-canvas" />
+
+      {/* Settings Button */}
+      <button
+        onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+        onMouseEnter={audio.playHover}
+        style={{
+          position: 'absolute',
+          top: '20px',
+          right: '20px',
+          background: 'rgba(18, 20, 38, 0.8)',
+          border: '1px solid var(--neon-cyan)',
+          borderRadius: '50%',
+          width: '50px',
+          height: '50px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'pointer',
+          zIndex: 100,
+          color: 'var(--neon-cyan)',
+          fontSize: '1.5rem',
+          boxShadow: '0 0 15px rgba(0, 255, 255, 0.3)',
+          transition: 'transform 0.3s ease',
+          transform: isSettingsOpen ? 'rotate(90deg)' : 'rotate(0deg)'
+        }}
+        title="설정 및 기록 메뉴 열기"
+      >
+        ⚙️
+      </button>
+
+      {/* Slide-out Settings Menu */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '0',
+          right: isSettingsOpen ? '0' : '-400px',
+          width: '380px',
+          height: '100%',
+          background: 'rgba(11, 12, 22, 0.98)',
+          borderLeft: '1px solid var(--neon-cyan)',
+          boxShadow: '-10px 0 30px rgba(0,0,0,0.8)',
+          transition: 'right 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          zIndex: 90,
+          padding: '80px 20px 20px',
+          borderTopLeftRadius: '12px',
+          borderBottomLeftRadius: '12px',
+          backdropFilter: 'blur(10px)',
+          overflowY: 'auto'
+        }}
+      >
+        <h3 style={{ color: 'var(--neon-cyan)', marginBottom: '20px', fontSize: '1.2rem', borderBottom: '1px solid rgba(0, 255, 255, 0.2)', paddingBottom: '10px' }}>
+          ⚙️ 설정 및 기록
+        </h3>
+        
+        <AuditLog
+          auditLogs={auditLogs}
+          violations={violations}
+          timestamp={timestamp}
+          options={options}
+          onUpdateOptions={setOptions}
+          playClick={audio.playClick}
+          playHover={audio.playHover}
+        />
+      </div>
 
       {/* Main App Container */}
       <div style={{
@@ -418,7 +483,7 @@ export default function App() {
         {/* Dynamic Inner Panel Layout */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'minmax(320px, 3.2fr) minmax(300px, 2fr)',
+          gridTemplateColumns: '1fr',
           gap: '24px',
           alignItems: 'start'
         }} className="responsive-container">
@@ -474,20 +539,6 @@ export default function App() {
               />
             )}
           </div>
-
-          {/* Right Static Audit Log Panel */}
-          <div>
-            <AuditLog
-              auditLogs={auditLogs}
-              violations={violations}
-              timestamp={timestamp}
-              options={options}
-              onUpdateOptions={setOptions}
-              playClick={audio.playClick}
-              playHover={audio.playHover}
-            />
-          </div>
-
         </div>
       </div>
     </div>
