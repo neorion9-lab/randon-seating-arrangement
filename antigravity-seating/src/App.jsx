@@ -39,20 +39,29 @@ const MOCK_STUDENTS = [
   { id: 's24', name: '문지민', gender: '여', status: 'normal' }
 ];
 
-// Initialize default layout (6x6 grid with seats and side aisles)
-const createDefaultLayout = (rows, cols) => {
+// Initialize default layout (dynamically add aisles between seats)
+const createDefaultLayout = (rows, seatCols) => {
   const grid = [];
   for (let r = 0; r < rows; r++) {
     const row = [];
-    for (let c = 0; c < cols; c++) {
-      // Create empty aisles at columns index 2 (between desks)
-      const type = c === 2 || c === 5 ? 'aisle' : 'seat';
+    let c = 0;
+    for (let s = 1; s <= seatCols; s++) {
+      // Create a seat
       row.push({
         row: r,
-        col: c,
-        type: type,
+        col: c++,
+        type: 'seat',
         lockedStudentId: null
       });
+      // Automatically add an empty aisle after every 2 seats, except at the end
+      if (s % 2 === 0 && s < seatCols) {
+        row.push({
+          row: r,
+          col: c++,
+          type: 'aisle',
+          lockedStudentId: null
+        });
+      }
     }
     grid.push(row);
   }
@@ -91,8 +100,10 @@ export default function App() {
 
   const [grid, setGrid] = useState(() => {
     const saved = localStorage.getItem('antigravity_grid');
-    // Default empty seat assignment mapping
-    return saved ? JSON.parse(saved) : Array(5).fill(null).map(() => Array(6).fill(null));
+    if (saved) return JSON.parse(saved);
+    // Default empty seat assignment mapping based on layout grid columns
+    const initialLayout = createDefaultLayout(5, 6);
+    return Array(5).fill(null).map(() => Array(initialLayout[0].length).fill(null));
   });
 
   const [history, setHistory] = useState(() => {
@@ -139,7 +150,8 @@ export default function App() {
     setRows(newRows);
     const newLayout = createDefaultLayout(newRows, cols);
     setLayoutGrid(newLayout);
-    setGrid(Array(newRows).fill(null).map(() => Array(cols).fill(null)));
+    const newColsCount = newLayout.length > 0 ? newLayout[0].length : 0;
+    setGrid(Array(newRows).fill(null).map(() => Array(newColsCount).fill(null)));
   };
 
   // Adjust layout cols
@@ -147,7 +159,8 @@ export default function App() {
     setCols(newCols);
     const newLayout = createDefaultLayout(rows, newCols);
     setLayoutGrid(newLayout);
-    setGrid(Array(rows).fill(null).map(() => Array(newCols).fill(null)));
+    const newColsCount = newLayout.length > 0 ? newLayout[0].length : 0;
+    setGrid(Array(rows).fill(null).map(() => Array(newColsCount).fill(null)));
   };
 
   // Update layout cell grid directly

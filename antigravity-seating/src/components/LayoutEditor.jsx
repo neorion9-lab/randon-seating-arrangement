@@ -149,7 +149,7 @@ export default function LayoutEditor({
         <div style={{
           display: 'grid',
           gridTemplateRows: `repeat(${rows}, 50px)`,
-          gridTemplateColumns: `repeat(${cols}, 50px)`,
+          gridTemplateColumns: `repeat(${layoutGrid.length > 0 ? layoutGrid[0].length : cols}, 50px)`,
           gap: '8px',
           background: 'rgba(11, 12, 22, 0.4)',
           padding: '16px',
