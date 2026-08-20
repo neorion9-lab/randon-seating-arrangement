@@ -274,8 +274,26 @@ export function generateSeatingLayout({
       bestForceSatisfiedCount = satisfiedForcePairs;
       
       // If we find a perfect arrangement (no violations), we can stop early
+      // BUT if balanceGender is enabled, we should keep searching for a better score unless it's perfectly balanced
       if (violations.length === 0) {
-        break;
+        let isPerfect = true;
+        if (options.balanceGender) {
+          for (const hp of horizontalPairs) {
+            const id1 = currentGrid[hp.r1][hp.c1];
+            const id2 = currentGrid[hp.r2][hp.c2];
+            if (id1 && id2) {
+              const student1 = students.find(s => s.id === id1);
+              const student2 = students.find(s => s.id === id2);
+              if (student1 && student2 && student1.gender === student2.gender) {
+                isPerfect = false;
+                break;
+              }
+            }
+          }
+        }
+        if (isPerfect) {
+          break;
+        }
       }
     }
   }
