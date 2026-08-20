@@ -359,14 +359,13 @@ export default function ClassroomGrid({
           {/* 2. Grid Area */}
           <div style={{
             gridArea: 'classroom',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            overflowX: 'auto',
-            padding: '10px'
+            overflow: 'auto',
+            padding: '20px'
           }}>
             <div style={{
               display: 'grid',
+              width: 'max-content',
+              margin: '0 auto',
               gridTemplateRows: `repeat(${layoutGrid.length}, 70px)`,
               gridTemplateColumns: `repeat(${layoutGrid[0].length}, 85px)`,
               gap: '16px',

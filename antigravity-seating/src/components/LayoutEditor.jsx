@@ -145,9 +145,11 @@ export default function LayoutEditor({
       </div>
 
       {/* Visual Editor Grid */}
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '10px', overflowX: 'auto' }}>
+      <div style={{ overflowX: 'auto', padding: '10px' }}>
         <div style={{
           display: 'grid',
+          width: 'max-content',
+          margin: '0 auto',
           gridTemplateRows: `repeat(${rows}, 50px)`,
           gridTemplateColumns: `repeat(${layoutGrid.length > 0 ? layoutGrid[0].length : cols}, 50px)`,
           gap: '8px',
