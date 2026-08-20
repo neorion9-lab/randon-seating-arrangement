@@ -13,6 +13,7 @@ export default function ClassroomGrid({
   playHover
 }) {
   const [draggedInfo, setDraggedInfo] = useState(null); // { id, source: 'grid'|'waiting', r, c }
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false); // Slide menu state
 
   // Drag and Drop handlers
   const handleDragStart = (e, id, source, r = null, c = null) => {
@@ -321,7 +322,79 @@ export default function ClassroomGrid({
   const absentStudents = students.filter(s => s.status === 'absent');
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', position: 'relative', overflowX: 'hidden' }}>
+      
+      {/* Settings Button */}
+      <button
+        onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+        onMouseEnter={playHover}
+        style={{
+          position: 'absolute',
+          top: '15px',
+          right: '15px',
+          background: 'rgba(18, 20, 38, 0.8)',
+          border: '1px solid var(--neon-cyan)',
+          borderRadius: '50%',
+          width: '40px',
+          height: '40px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'pointer',
+          zIndex: 20,
+          color: 'var(--neon-cyan)',
+          fontSize: '1.2rem',
+          boxShadow: '0 0 10px rgba(0, 255, 255, 0.2)',
+          transition: 'transform 0.3s ease',
+          transform: isSettingsOpen ? 'rotate(90deg)' : 'rotate(0deg)'
+        }}
+        title="화면 설정"
+      >
+        ⚙️
+      </button>
+
+      {/* Slide-out Settings Menu */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '0',
+          right: isSettingsOpen ? '0' : '-320px',
+          width: '300px',
+          height: '100%',
+          background: 'rgba(11, 12, 22, 0.95)',
+          borderLeft: '1px solid var(--neon-cyan)',
+          boxShadow: '-10px 0 30px rgba(0,0,0,0.8)',
+          transition: 'right 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          zIndex: 15,
+          padding: '65px 20px 20px',
+          borderTopLeftRadius: '12px',
+          borderBottomLeftRadius: '12px',
+          backdropFilter: 'blur(10px)'
+        }}
+      >
+        <h3 style={{ color: 'var(--neon-cyan)', marginBottom: '20px', fontSize: '1.1rem', borderBottom: '1px solid rgba(0, 255, 255, 0.2)', paddingBottom: '10px' }}>
+          ⚙️ 자리바꾸기 설정
+        </h3>
+        
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+          <div style={{ color: '#e2e8f0', fontSize: '0.9rem' }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
+              <input type="checkbox" defaultChecked />
+              우주 애니메이션 켜기
+            </label>
+          </div>
+          <div style={{ color: '#e2e8f0', fontSize: '0.9rem' }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
+              <input type="checkbox" defaultChecked />
+              효과음 켜기
+            </label>
+          </div>
+          <p style={{ color: '#94a3b8', fontSize: '0.8rem', marginTop: '20px', lineHeight: '1.5' }}>
+            ※ 추후 이곳에 애니메이션 속도 조절, 테마 변경 등 다양한 설정이 추가될 예정입니다.
+          </p>
+        </div>
+      </div>
+
       {/* Classroom Seating layout View */}
       <div className="glass-panel neon-border-cyan" style={{
         padding: '30px 24px',
