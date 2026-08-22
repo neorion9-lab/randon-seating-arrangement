@@ -469,9 +469,9 @@ export default function App() {
       <div style={{
         position: 'relative',
         zIndex: 5,
-        maxWidth: '1280px',
+        width: '100%',
         margin: '0 auto',
-        padding: '30px 20px',
+        padding: '30px 40px',
         display: 'flex',
         flexDirection: 'column',
         gap: '24px'

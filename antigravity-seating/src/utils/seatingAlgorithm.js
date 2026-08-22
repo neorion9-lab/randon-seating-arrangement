@@ -185,13 +185,46 @@ export function generateSeatingLayout({
       }
     });
 
+    // Enforce Gender Balance
+    if (options.balanceGender) {
+      const remainingEmptyPairs = horizontalPairs.filter(hp => 
+        currentGrid[hp.r1][hp.c1] === null && currentGrid[hp.r2][hp.c2] === null
+      );
+      
+      let remainingBoys = shuffledStudents.filter(s => !assignedIds.has(s.id) && s.gender === '남');
+      let remainingGirls = shuffledStudents.filter(s => !assignedIds.has(s.id) && s.gender === '여');
+
+      remainingEmptyPairs.forEach(hp => {
+        if (remainingBoys.length > 0 && remainingGirls.length > 0) {
+          const boy = remainingBoys.pop();
+          const girl = remainingGirls.pop();
+          
+          if (Math.random() > 0.5) {
+            currentGrid[hp.r1][hp.c1] = boy.id;
+            currentGrid[hp.r2][hp.c2] = girl.id;
+          } else {
+            currentGrid[hp.r1][hp.c1] = girl.id;
+            currentGrid[hp.r2][hp.c2] = boy.id;
+          }
+          
+          assignedIds.add(boy.id);
+          assignedIds.add(girl.id);
+
+          const s1SeatIdx = currentSeats.findIndex(cs => cs.r === hp.r1 && cs.c === hp.c1);
+          if (s1SeatIdx !== -1) currentSeats.splice(s1SeatIdx, 1);
+          const s2SeatIdx = currentSeats.findIndex(cs => cs.r === hp.r2 && cs.c === hp.c2);
+          if (s2SeatIdx !== -1) currentSeats.splice(s2SeatIdx, 1);
+        }
+      });
+    }
+
     // For any remaining assignable students, place them in the remaining empty seats
     let seatIndex = 0;
     shuffledStudents.forEach(student => {
-      if (assignedIds.has(student.id)) return; // Already placed in a force pair
+      if (assignedIds.has(student.id)) return; // Already placed in a force pair or gender pair
 
       if (seatIndex < currentSeats.length) {
-        const seat = currentSeats[seatIndex];
+        const seat = currentSeats[currentSeats.length - 1 - seatIndex]; // take from end
         currentGrid[seat.r][seat.c] = student.id;
         seatIndex++;
       }

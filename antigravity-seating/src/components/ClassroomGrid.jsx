@@ -364,10 +364,11 @@ export default function ClassroomGrid({
           }}>
             <div style={{
               display: 'grid',
-              width: 'max-content',
+              width: '100%',
+              minHeight: '600px', // Ensure it has some height to stretch vertically
               margin: '0 auto',
-              gridTemplateRows: `repeat(${layoutGrid.length}, 70px)`,
-              gridTemplateColumns: `repeat(${layoutGrid[0].length}, 85px)`,
+              gridTemplateRows: `repeat(${layoutGrid.length}, minmax(70px, 1fr))`,
+              gridTemplateColumns: `repeat(${layoutGrid[0].length}, minmax(85px, 1fr))`,
               gap: '16px',
               padding: '24px',
               background: 'rgba(4, 5, 14, 0.6)',
