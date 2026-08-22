@@ -73,12 +73,12 @@ export default function LayoutEditor({
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
         <div>
           <label style={{ display: 'block', fontSize: '0.85rem', marginBottom: '6px', color: '#cbd5e1' }}>
-            가로 칸 수 (열: {cols})
+            가로 책상 개수 (통로 제외: {cols}개)
           </label>
           <input
             type="range"
             min="3"
-            max="8"
+            max="10"
             value={cols}
             onChange={(e) => { playHover(); onChangeCols(parseInt(e.target.value)); }}
             style={{ width: '100%', accentColor: 'var(--neon-purple)' }}
@@ -86,12 +86,12 @@ export default function LayoutEditor({
         </div>
         <div>
           <label style={{ display: 'block', fontSize: '0.85rem', marginBottom: '6px', color: '#cbd5e1' }}>
-            세로 칸 수 (행: {rows})
+            세로 책상 줄 수 (행: {rows}줄)
           </label>
           <input
             type="range"
             min="3"
-            max="8"
+            max="10"
             value={rows}
             onChange={(e) => { playHover(); onChangeRows(parseInt(e.target.value)); }}
             style={{ width: '100%', accentColor: 'var(--neon-purple)' }}
